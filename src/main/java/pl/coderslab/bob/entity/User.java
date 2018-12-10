@@ -27,7 +27,7 @@ public class User {
     @Size(min = 8)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PurchasedProduct> purchasedProducts;
 
 

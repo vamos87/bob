@@ -11,8 +11,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import pl.coderslab.bob.converter.BankConverter;
+import pl.coderslab.bob.converter.InstrumentTypeConverter;
+//import pl.coderslab.bob.converter.ProductConverter;
 //import pl.coderslab.converter.AuthorConverter;
 //import pl.coderslab.converter.CategoryConverter;
 
@@ -43,22 +47,34 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         return viewResolver;
     }
 
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addConverter(getCategoryConverter());
-//        registry.addConverter(getAuthorConverter());
-//    }
-//
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:assets/");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(getInstrumentTypeConverter());
+        registry.addConverter(getBankConverter());
+//        registry.addConverter(getProductConverter());
+    }
+
+    @Bean
+    public InstrumentTypeConverter getInstrumentTypeConverter() {
+        return new InstrumentTypeConverter();
+    }
+
+    @Bean
+    public BankConverter getBankConverter() {
+        return new BankConverter();
+    }
+
 //    @Bean
-//    public CategoryConverter getCategoryConverter() {
-//        return new CategoryConverter();
+//    public ProductConverter getProductConverter() {
+//        return new ProductConverter();
 //    }
-//
-//    @Bean
-//    public AuthorConverter getAuthorConverter() {
-//        return new AuthorConverter();
-//    }
-//
+
     @Bean
     public Validator validator()	{
         return	new LocalValidatorFactoryBean();

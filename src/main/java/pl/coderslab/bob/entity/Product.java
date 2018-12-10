@@ -27,19 +27,17 @@ public class Product {
     @NotNull
     private InstrumentType instrumentType;
 
-    @Column
-    @Size(max = 100)
-    private String note;
-
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<PurchasedProduct> purchasedProducts;
 
+    @Transient
+    private long popularity;
 
-    public Product(String name, Bank bank, InstrumentType instrumentType, String note, List<PurchasedProduct> purchasedProducts) {
+
+    public Product(String name, Bank bank, InstrumentType instrumentType, List<PurchasedProduct> purchasedProducts) {
         this.name = name;
         this.bank = bank;
         this.instrumentType = instrumentType;
-        this.note = note;
         this.purchasedProducts = purchasedProducts;
     }
 
@@ -52,6 +50,14 @@ public class Product {
 
     public void setPurchasedProducts(List<PurchasedProduct> purchasedProducts) {
         this.purchasedProducts = purchasedProducts;
+    }
+
+    public long getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(long popularity) {
+        this.popularity = popularity;
     }
 
     public long getId() {
@@ -86,11 +92,8 @@ public class Product {
         this.instrumentType = instrumentType;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
+    @Override
+    public String toString() {
+        return bank.getName()+"  |  "+name;
     }
 }

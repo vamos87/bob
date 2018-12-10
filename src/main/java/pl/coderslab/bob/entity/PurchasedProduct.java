@@ -1,6 +1,11 @@
 package pl.coderslab.bob.entity;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.sql.Delete;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,15 +25,27 @@ public class PurchasedProduct {
     private float value;
 
     @Column
+    @Size(max = 100)
+    private String note;
+
+    @Column
     private boolean isActive;
 
     @OneToMany(mappedBy = "purchasedProduct")
-    private List<History> histories;
+    private List<History> histories = new ArrayList<>();
 
-    public PurchasedProduct(Product product, User user, float value, boolean isActive, List<History> histories) {
+//    @Transient
+//    private float sum;
+//
+//    @Transient
+//    private float quantity;
+//
+
+    public PurchasedProduct(Product product, User user, float value, String note, boolean isActive, List<History> histories) {
         this.product = product;
         this.user = user;
         this.value = value;
+        this.note = note;
         this.isActive = isActive;
         this.histories = histories;
     }
@@ -82,5 +99,29 @@ public class PurchasedProduct {
 
     public void setValue(float value) {
         this.value = value;
+    }
+
+//    public float getSum() {
+//        return sum;
+//    }
+//
+//    public void setSum(float sum) {
+//        this.sum = sum;
+//    }
+//
+//    public float getQuantity() {
+//        return quantity;
+//    }
+//
+//    public void setQuantity(float quantity) {
+//        this.quantity = quantity;
+//    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

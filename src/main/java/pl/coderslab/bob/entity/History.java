@@ -3,6 +3,7 @@ package pl.coderslab.bob.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class History {
@@ -16,7 +17,7 @@ public class History {
 
     @Column
     @NotNull
-    private LocalDate date;
+    private LocalDateTime date;
 
     @ManyToOne
     private PurchasedProduct purchasedProduct;
@@ -27,11 +28,11 @@ public class History {
     public History() {
     }
 
-    public History(String operation, LocalDate date, PurchasedProduct purchasedProduct) {
+    public History(String operation, LocalDateTime date, PurchasedProduct purchasedProduct, float value) {
         this.operation = operation;
         this.date = date;
         this.purchasedProduct = purchasedProduct;
-        this.value = purchasedProduct.getValue();
+        this.value = value;
     }
 
     public long getId() {
@@ -58,11 +59,11 @@ public class History {
         this.operation = operation;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
