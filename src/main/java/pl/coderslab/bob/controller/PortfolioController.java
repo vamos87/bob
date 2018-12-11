@@ -59,12 +59,14 @@ public class PortfolioController {
             User user = (User) session.getAttribute("user");
             List<PurchasedProduct> purchasedProducts = purchasedProductRepository.findPurchasedProductsActive(user);
             for (PurchasedProduct purchasedProduct : purchasedProducts) {
-                purchasedProductRepository.delete(purchasedProduct);
                 History history = new History();
                 history.setPurchasedProduct(purchasedProduct);
+                history.setValue(purchasedProduct.getValue());
                 history.setOperation("deleted");
                 history.setDate(LocalDateTime.now());
                 historyRepository.save(history);
+                purchasedProduct.setActive(false);
+                purchasedProductRepository.delete(purchasedProduct);
             }
         }
         return "redirect:/portfolio";

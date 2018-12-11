@@ -8,20 +8,25 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.coderslab.bob.entity.PurchasedProduct;
 import pl.coderslab.bob.entity.User;
+import pl.coderslab.bob.repository.PurchasedProductRepository;
 import pl.coderslab.bob.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class UserController {
 
     private UserRepository userRepository;
+    private PurchasedProductRepository purchasedProductRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PurchasedProductRepository purchasedProductRepository) {
         this.userRepository = userRepository;
+        this.purchasedProductRepository = purchasedProductRepository;
     }
 
     @GetMapping("/user")
@@ -36,7 +41,6 @@ public class UserController {
             model.addAttribute("wrong", "wrong password");
             return "register";
         }
-
         userRepository.save(user);
         return "redirect;portfolio";
     }
@@ -50,7 +54,14 @@ public class UserController {
     public String delete(HttpSession session, @Param("button") String button) {
         if ("yes".equals(button)) {
             User user = (User) session.getAttribute("user");
+            List<PurchasedProduct> productList = purchasedProductRepository.findAll();
+            for (PurchasedProduct purchasedProduct : productList) {
+                if (purchasedProduct.getUser().getId() == user.getId()) {
+                    purchasedProductRepository.delete(purchasedProduct);
+                }
+            }
             userRepository.delete(user);
+            session.removeAttribute("user");
             return "redirect:/";
         }
         return "redirect:/user";

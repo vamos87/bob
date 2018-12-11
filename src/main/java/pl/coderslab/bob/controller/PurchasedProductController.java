@@ -99,12 +99,14 @@ public class PurchasedProductController {
     public String deleteProduct(@Param("id") long id, @Param("button") String button) {
         if ("yes".equals(button)) {
             PurchasedProduct purchasedProduct = purchasedProductRepository.findOne(id);
-            purchasedProductRepository.delete(id);
             History history = new History();
+            history.setValue(purchasedProduct.getValue());
             history.setPurchasedProduct(purchasedProduct);
             history.setOperation("deleted");
             history.setDate(LocalDateTime.now());
             historyRepository.save(history);
+            purchasedProduct.setActive(false);
+            purchasedProductRepository.delete(purchasedProduct);
         }
         return "redirect:/portfolio";
     }
